@@ -1,6 +1,7 @@
 
 const http = require("http");
 const fs = require("fs");
+const toUpper = require('./util.js');
 require("dotenv").config();
 
 const PORT = process.env.PORT
@@ -12,7 +13,7 @@ const server = http.createServer((req, res) => {
         if (err) console.log(err)
         else {
             res.writeHead(200, { "Context-Type": "text/plain; charset=utf-8" });
-            files.forEach(f => res.write(`${f}\n`));
+            files.forEach(f => res.write(`${toUpper(f)}\n`));
             res.end("Instituto de computação");
         }
     })
