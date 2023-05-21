@@ -1,27 +1,21 @@
-
 const http = require("http");
 const fs = require("fs");
 require("dotenv").config();
 
-const PORT = process.env.PORT || 3333
+PORT = process.env.PORT || 3333;
 const folder = process.argv[2];
 
 const server = http.createServer((req, res) => {
+  fs.readdir(folder, (err, files) => {
+    if (err) console.log(err);
+    else {
+      res.writeHead(200, { "Content-type": "text/html; charset=utf-8" });
+      files.forEach((f) => res.write(`${f} <br>`));
+      res.end();
+    }
+  });
+});
 
-        fs.readdir(folder,(err,files) => {
-           if(err){
-              console.log(err);
-           }
-           else{
-              res.writeHead(200, { "Content-Type": "text/html" });
-              files.forEach(f => res.write(`${f}<br>`));
-     
-              res.end();
-           }
-        })
-     
-     })
-
-     server.listen(PORT,() => {
-        console.log(`Server Online na porta ${PORT}`);
-     });
+server.listen(PORT, () => {
+  console.log(`Rodando an port ${PORT}`);
+});

@@ -1,7 +1,11 @@
-function createLink(filename){
-    return `<a href=/${filename}</a><br>\n`
+function toUpper(str) {
+   return str.toUpperCase();
+ }
+ function createLink(filename) {
+   return `<a href="/${filename}">${filename}<a/><br>`;
+ }
+ function createVoltar() {
+   return `<a href="/">Voltar<a/><br>`;
  }
  
- modules.export = {
-    createLink
- }
+ export default { toUpper, createLink, createVoltar };
