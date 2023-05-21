@@ -1,6 +1,7 @@
-function toUpper(str){
-    return str.toUpperCase(str);
-}
-
-
-module.exports = toUpper
+function createLink(filename){
+    return `<a href=/${filename}</a><br>\n`
+ }
+ 
+ modules.export = {
+    createLink
+ }
