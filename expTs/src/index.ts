@@ -1,26 +1,44 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
+
+import router from './router/router';
+
 import validateEnv from './utils/validateEnv';
 import dotenv from 'dotenv';
-import morgan from 'morgan';
+
 import logger from './middlewares/logger';
-import fs from 'fs';
+import loggerUser from './middlewares/loggerUser';
+import { engine } from 'express-handlebars';
 
 dotenv.config();
-const PORT = process.env.PORT ?? 3333;
+validateEnv();
+
 const app = express();
+const PORT = process.env.PORT ?? 3333;
+const publicPath = `${process.cwd()}/public`;
 
-//app.use(logger('completo'));
-app.use(logger('simples'));
+app.engine(
+  'handlebars',
+  engine({
+    helpers: require(`${__dirname}/views/helpers/helpers.ts`),
+  }),
+);
+app.set('view engine', 'handlebars');
+app.set('views', `${__dirname}/views`);
 
-app.use((req, res, next) => {
-  console.log('Ola');
+app.use(router); // Criando as rotas da aplicação
+
+app.use(logger('completo')); // Gerando logs no console
+app.use(loggerUser('completo')); // Salvando logs em "logs/logs.txt"
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log('Hello World!');
   next();
 });
 
-app.get('/', (req: Request, res: Response) => {
-  res.end('Web Academy');
-});
+// Renderizando arquivos estáticos
+app.use('/css', express.static(`${publicPath}/css`));
+app.use('/js', express.static(`${publicPath}/js`));
 
 app.listen(PORT, () => {
-  console.log(`Express app iniciada na porta ${PORT}`);
+  console.log(`App Express iniciada na porta ${PORT}.`);
 });
