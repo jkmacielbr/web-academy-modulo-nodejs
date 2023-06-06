@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import logger from './middlewares/logger';
 import loggerUser from './middlewares/loggerUser';
 import { engine } from 'express-handlebars';
+import sass from 'node-sass-middleware';
 
 dotenv.config();
 validateEnv();
@@ -25,6 +26,15 @@ app.engine(
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
 
+app.use(
+  sass({
+    src: `${publicPath}/scss`,
+    dest: `${publicPath}/css`,
+    outputStyle: 'compressed',
+    prefix: '/css',
+  }),
+);
+
 app.use(router); // Criando as rotas da aplicação
 
 app.use(logger('completo')); // Gerando logs no console
@@ -38,6 +48,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Renderizando arquivos estáticos
 app.use('/css', express.static(`${publicPath}/css`));
 app.use('/js', express.static(`${publicPath}/js`));
+app.use(
+  '/webfonts',
+  express.static(
+    `${__dirname}/../node_modules/@fortawesome/fontawesome-free/webfonts`,
+  ),
+);
 
 app.listen(PORT, () => {
   console.log(`App Express iniciada na porta ${PORT}.`);
